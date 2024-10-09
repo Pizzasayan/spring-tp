@@ -112,8 +112,9 @@ public class UserController {
      * @param id - The id of the User to delete
      */
     @DeleteMapping("removeUser/{id}")
-    public void deleteUser(@PathVariable("id") final Long id){
+    public String deleteUser(@PathVariable("id") final Long id){
         userService.deleteUser(id);
+        return "User number" + id + " deleted.";
     }
 
 
@@ -125,7 +126,7 @@ public class UserController {
 
         List<Article> articles = new ArrayList<>();
 
-        Article article = new Article("second title", "this is the content");
+        Article article = new Article("second tada", "this is");
 
         article.setAuthor(userTemp.orElse(null));
         articles.add(article);
@@ -140,7 +141,7 @@ public class UserController {
     @GetMapping("/getArticle/{id}")
     public Article getArticle(@PathVariable(name = "id")final Long id){
 
-        Article articleOut = articleService.getReferenceById(id);
+        Article articleOut = articleService.getById(id);
 
         return articleOut;
     }
