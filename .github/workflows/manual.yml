@@ -20,7 +20,7 @@ jobs:
         run: mvn compile
 
       - name: Package
-        run: mvn package
+        run: mvn clean package
   
   test:
     runs-on: ubuntu-latest
