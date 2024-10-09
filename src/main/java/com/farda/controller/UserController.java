@@ -44,6 +44,7 @@ public class UserController {
 
         // New article list
         List<Article> articles = new ArrayList<>();
+
         for(Article articleIn : user.getArticlesList()){
 
             // New article
@@ -52,6 +53,7 @@ public class UserController {
             article.setAuthor(userIn);
             // Add article to article list after setting the owner
             articles.add(article);
+
         }
 
         userIn.setArticlesList(articles);
