@@ -14,7 +14,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copier le fichier JAR généré depuis l'étape de build
-COPY --from=build /app/target/tp-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/firstproject-0.0.1-SNAPSHOT.jar app.jar
 
 # Exposer le port sur lequel l'application écoute
 EXPOSE 9000
