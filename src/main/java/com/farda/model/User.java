@@ -1,43 +1,64 @@
 package com.farda.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.annotation.Nonnull;
-import jakarta.persistence.*;
-
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name="users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "username"),
-        @UniqueConstraint(columnNames = "email")
-})
-public class User {
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
+
+
+@Entity
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email") })
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Nonnull
-    @Column(length = 20)
+    @NotBlank
+    @Size(max = 20)
     private String username;
 
-    @Nonnull
-    @Column(length = 50)
+    @NotBlank
+    @Size(max = 50)
+    @Email
     private String email;
 
-    @Nonnull
-    @Column(length = 120)
+    @NotBlank
+    @Size(max = 120)
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Article> articlesList;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonBackReference
+    private List<Article> articles = new ArrayList<>();
 
-    public User (){}
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
-    public  User (String username, String email, String password){
+    public User() {
+    }
+
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -47,40 +68,42 @@ public class User {
         return id;
     }
 
-    @Nonnull
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(@Nonnull String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
-    @Nonnull
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(@Nonnull String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    @Nonnull
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(@Nonnull String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public Collection<Article> getArticlesList() {
-        return articlesList;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setArticlesList(List<Article> articlesList) {
-        this.articlesList = articlesList;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
+
 }
 
 

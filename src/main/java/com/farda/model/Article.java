@@ -1,50 +1,38 @@
 package com.farda.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.annotation.Nonnull;
-import jakarta.persistence.*;
+import java.util.Date;
 
-import java.util.Optional;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-@Table(name="articles", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "title"),
-        @UniqueConstraint(columnNames = "content")
-})
 public class Article {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Nonnull
-    @Column(length = 100)
     private String title;
 
-    @Nonnull
-    @Column(length = 1000)
+    @Column(name = "CONTENT", length = Integer.MAX_VALUE)
     private String content;
 
-    @Nonnull
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "author_id")
-    @JsonBackReference
-    private User author;
+    private Date date;
 
-    @Nonnull
-    public User getAuthor() {
-        return author;
-    }
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User user;
 
-    public void setAuthor(@Nonnull User author) {
-        this.author = author;
-    }
+    public Article() {}
 
-    public Article(){}
-
-    public Article(String title, String content){
+    public Article(String title, String content, User user) {
         this.title = title;
         this.content = content;
+        this.user = user;
     }
 
     public Long getId() {
@@ -55,22 +43,35 @@ public class Article {
         this.id = id;
     }
 
-    @Nonnull
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(@Nonnull String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-
-    @Nonnull
     public String getContent() {
         return content;
     }
 
-    public void setContent(@Nonnull String content) {
+    public void setContent(String content) {
         this.content = content;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
